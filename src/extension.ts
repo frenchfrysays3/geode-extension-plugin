@@ -1,6 +1,16 @@
 import * as vscode from 'vscode';
-import { spawn } from 'child_process';
+import { spawn } from 'child configure';
 import * as fs from 'fs';
+
+// Helper default platform functions
+function 
+// Helper windows functions
+
+// Helper mac functions
+
+// Helper ios functions
+
+// Helper android functions
 
 export function activate(context: vscode.ExtensionContext) {
 	const commandBuildDefault = 'geodeplugin.builddefault';
@@ -60,14 +70,19 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Build for default command handler
 	const commandBuildDefaultHandler = () => {
-		
-
+		configureDefault();
+		buildDefault();
 	};
 
 	// push output channel
 	context.subscriptions.push(Output);
+
+	// Push commands
+	context.subscriptions.push(vscode.commands.registerCommand(commandBuildDefault, commandBuildDefaultHandler));
+	context.subscriptions.push();
+	context.subscriptions.push();
+	context.subscriptions.push();
+	context.subscriptions.push();
 }
 
-export function deactivate() {
-
-}
+export function deactivate() {}
