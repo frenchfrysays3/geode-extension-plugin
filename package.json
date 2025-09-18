@@ -14,8 +14,24 @@
   "contributes": {
     "commands": [
       {
-        "command": "geode-extension-plugin.helloWorld",
-        "title": "Hello World"
+        "command": "geodeplugin.builddefault",
+        "title": "Geode: Build for Default Platform"
+      },
+      {
+        "command": "geodeplugin.buildwin",
+        "title": "Geode: Build for Windows"
+      },
+      {
+        "command": "geodeplugin.buildmac",
+        "title": "Geode: Build for macOS"
+      },
+      {
+        "command": "geodeplugin.buildios",
+        "title": "Geode: Build for iOS"
+      },
+      {
+        "command": "geodeplugin.buildandroid",
+        "title": "Geode: Build for Android"
       }
     ]
   },
