@@ -2,16 +2,64 @@ import * as vscode from 'vscode';
 import { spawn } from 'child configure';
 import * as fs from 'fs';
 
-// Helper default platform functions
-function 
-// Helper windows functions
+// Helper functions
+function configureDefault(Output) {
+	Output.clear();
+	Output.show(true);
+	Output.append('Executing command cmake -B build');
 
-// Helper mac functions
+	const process = spawn('cmake', ['-B', 'build']);
 
-// Helper ios functions
+	process.stdout.on('data', (data) => {
+		Output.append(data.toString());
+	});
 
-// Helper android functions
+	process.stderr.on('data', (data) => {
+		Output.append(data.toString());
+	});
 
+	process.on('close', (code) => {
+		if (code === 0) {
+			vscode.window.showInformationMessage('CMake Exited with Code 0. Successful Configure.');
+			Output.appendLine('CMake Exited with Code 0');
+		} else {
+			Output.appendLine(`CMake Exited with Code ${code}`);
+			vscode.window.showErrorMessage(`CMake Exited with Code ${code}, Unsuccessful Configure.`);
+		}
+	});
+}
+
+function buildDefault(Output) {
+	Output.clear();
+	Output.show(true);
+	Output.append('Executing command cmake --build build --config RelWithDebInfo');
+
+	const process = spawn('cmake', ['--build', 'build', '--config', 'RelWithDebInfo']);
+
+	process.stdout.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	process.stderr.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	process.on('close', (code) => {
+		if (code === 0) {
+			vscode.window.showInformationMessage('CMake Exited with Code 0. Successful Build.');
+			Output.appendLine('CMake Exited with Code 0');
+		} else {
+			Output.appendLine(`CMake Exited with Code ${code}`);
+			vscode.window.showErrorMessage(`CMake Exited with Code ${code}, Unsuccessful build.`);
+		}
+	});
+}
+
+function buildWin(Output) {
+	Output.clear();
+}
+
+// Extension stuff
 export function activate(context: vscode.ExtensionContext) {
 	const commandBuildDefault = 'geodeplugin.builddefault';
 	const commandBuildWin = 'geodeplugin.buildwin';
@@ -70,7 +118,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Build for default command handler
 	const commandBuildDefaultHandler = () => {
-		configureDefault();
+		if (!defaultBuildFolderExists) {
+			configureDefault(Output);
+		}
 		buildDefault();
 	};
 
@@ -79,10 +129,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Push commands
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildDefault, commandBuildDefaultHandler));
-	context.subscriptions.push();
-	context.subscriptions.push();
-	context.subscriptions.push();
-	context.subscriptions.push();
+	context.subscriptions.push(vscode.commands.registerCommand(commandBuildWin, ));
+	context.subscriptions.push(vscode.commands.registerCommand(commandBuildMac, ));
+	context.subscriptions.push(vscode.commands.registerCommand(commandBuildIos, ));
+	context.subscriptions.push(vscode.commands.registerCommand(commandBuildAndroid, ));
 }
 
 export function deactivate() {}
