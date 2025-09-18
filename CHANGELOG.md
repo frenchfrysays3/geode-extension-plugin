@@ -2,8 +2,5 @@
 
 All notable changes to the "geode-extension-plugin" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+## [v1.0.0 (9/20/2025)](https://github.com/frenchfrysays3/geode-extension-plugin/releases/v1.0.0)
+- Initial Release
