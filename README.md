@@ -23,4 +23,3 @@ None yet.
 ### 1.0.0
 
 Initial release of frenchfrysays's Geode Plugin
-dfgdfg
