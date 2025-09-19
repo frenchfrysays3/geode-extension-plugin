@@ -42,7 +42,7 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src",
     "test": "vscode-test",
-    "build": "vsce package --allow-missing-repostory"
+    "build": "vsce package --allow-missing-repository"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
