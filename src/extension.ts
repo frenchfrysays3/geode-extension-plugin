@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { spawn } from 'child configure';
+import { spawn } from 'child_process';
 import * as fs from 'fs';
 
 // Helper functions
-function configureDefault(Output) {
+function configureDefault(Output: vscode.OutputChannel) {
 	Output.clear();
 	Output.show(true);
 	Output.append('Executing command cmake -B build');
@@ -29,7 +29,7 @@ function configureDefault(Output) {
 	});
 }
 
-function buildDefault(Output) {
+function buildDefault(Output: vscode.OutputChannel) {
 	Output.clear();
 	Output.show(true);
 	Output.append('Executing command cmake --build build --config RelWithDebInfo');
@@ -55,10 +55,101 @@ function buildDefault(Output) {
 	});
 }
 
-function buildWin(Output) {
+function buildWin(Output: vscode.OutputChannel) {
 	Output.clear();
+	Output.show();
+	Output.append('Executing geode build -p windows');
+
+	const process = spawn('geode', ['build', '-p', 'windows']);
+
+	process.stdout.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	process.stderr.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	process.on('close', (code) => {
+		if (code === 0) {
+			vscode.window.showInformationMessage('Build finished with Code 0.');
+		} else {
+			vscode.window.showErrorMessage(`Build finished with exit code ${code}`);
+		}
+	});
 }
 
+function buildMac(Output: vscode.OutputChannel) {
+	Output.clear();
+	Output.show(true);
+	Output.append('Executing command: geode build -p mac-os');
+
+	const process = spawn('geode', ['build', '-p', 'mac-os']);
+
+	process.stdout.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	process.stderr.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	process.on('close', (code) => {
+		if (code === 0) {
+			vscode.window.showInformationMessage('Build finished with Code 0.');
+		} else {
+			vscode.window.showErrorMessage(`Build finished with exit code ${code}`);
+		}
+	});
+}
+
+function buildIos(Output: vscode.OutputChannel) {
+	Output.clear();
+	Output.show(true);
+	Output.append('Executing command: geode build -p ios');
+
+	const process = spawn('geode', ['build', '-p', 'ios']);
+
+	process.stdout.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	process.stderr.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	process.on('close', (code) => {
+		if (code === 0) {
+			vscode.window.showInformationMessage('Build finished with Code 0.');
+		} else {
+			vscode.window.showErrorMessage(`Build finished with exit code ${code}`);
+		}
+	});
+}
+
+function buildAndroid(Output: vscode.OutputChannel) {
+	Output.clear();
+	Output.show(true);
+	Output.append('Executing command: geode build -p android');
+
+	const process = spawn('geode', ['build', '-p', 'android']);
+
+	process.stdout.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	process.stderr.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	process.on('close', (code) => {
+		if (code === 0) {
+			vscode.window.showInformationMessage('Build finished with Code 0.');
+		} else {
+			vscode.window.showErrorMessage(`Build finished with exit code ${code}`);
+		}
+	});
+}
 // Extension stuff
 export function activate(context: vscode.ExtensionContext) {
 	const commandBuildDefault = 'geodeplugin.builddefault';
@@ -67,50 +158,14 @@ export function activate(context: vscode.ExtensionContext) {
 	const commandBuildIos = 'geodeplugin.buildios';
 	const commandBuildAndroid = 'geodeplugin.buildandroid';
 	let defaultBuildFolder = 'build';
-	let winBuildFolder = 'build-win';
-	let macBuildFolder = 'build-mac';
-	let iosBuildFolder = 'build-ios';
-	let androidBuildFolder = 'build-android';
 
 	let defaultBuildFolderExists;
-	let winBuildFolderExists;
-	let macBuildFolderExists;
-	let iosBuildFolderExists;
-	let androidBuildFolderExists;
 
 	// See if the default build folder exists
 	if (fs.existsSync(defaultBuildFolder) && fs.statSync(defaultBuildFolder).isDirectory()) {
 		defaultBuildFolderExists = true;
 	} else {
 		defaultBuildFolderExists = false;
-	}
-
-	// See if the windows build folder exists
-	if (fs.existsSync(winBuildFolder) && fs.statSync(winBuildFolder).isDirectory()) {
-		winBuildFolderExists = true;
-	} else {
-		winBuildFolderExists = false;
-	}
-
-	// See if the macos build folder exists
-	if (fs.existsSync(macBuildFolder) && fs.statSync(macBuildFolder).isDirectory()) {
-		macBuildFolderExists = true;
-	} else {
-		macBuildFolderExists = false;
-	}
-
-	// See if the ios build folder exists
-	if (fs.existsSync(iosBuildFolder) && fs.statSync(iosBuildFolder).isDirectory()) {
-		iosBuildFolderExists = true;
-	} else {
-		iosBuildFolderExists = false;
-	}
-
-	// See if the android build folders exists
-	if (fs.existsSync(androidBuildFolder) && fs.statSync(androidBuildFolder).isDirectory()) {
-		androidBuildFolderExists = true;
-	} else {
-		androidBuildFolderExists = false;
 	}
 
 	// Create output channel
@@ -121,7 +176,25 @@ export function activate(context: vscode.ExtensionContext) {
 		if (!defaultBuildFolderExists) {
 			configureDefault(Output);
 		}
-		buildDefault();
+		buildDefault(Output);
+	};
+
+	// Build for Windows command handler
+	const commandBuildWinHandler = () => {
+		buildWin(Output);
+	};
+
+	// Build for Mac command handler
+	const commandBuildMacHandler = () => {
+		buildMac(Output);
+	};
+
+	const commandBuildIosHandler = () => {
+		buildIos(Output);
+	};
+
+	const commandBuildAndroidHandler = () => {
+		buildAndroid(Output);
 	};
 
 	// push output channel
@@ -129,10 +202,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Push commands
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildDefault, commandBuildDefaultHandler));
-	context.subscriptions.push(vscode.commands.registerCommand(commandBuildWin, ));
-	context.subscriptions.push(vscode.commands.registerCommand(commandBuildMac, ));
-	context.subscriptions.push(vscode.commands.registerCommand(commandBuildIos, ));
-	context.subscriptions.push(vscode.commands.registerCommand(commandBuildAndroid, ));
+	context.subscriptions.push(vscode.commands.registerCommand(commandBuildWin, commandBuildWinHandler));
+	context.subscriptions.push(vscode.commands.registerCommand(commandBuildMac, commandBuildMacHandler));
+	context.subscriptions.push(vscode.commands.registerCommand(commandBuildIos, commandBuildIosHandler));
+	context.subscriptions.push(vscode.commands.registerCommand(commandBuildAndroid, commandBuildAndroidHandler));
 }
 
 export function deactivate() {}
