@@ -2,6 +2,8 @@
   "name": "frenchfrysaysgeodeplugin",
   "displayName": "frenchfrysays's Geode Plugin",
   "description": "",
+  "publisher": "frenchfrysays",
+  "author": "frenchfrysays",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.104.0"
