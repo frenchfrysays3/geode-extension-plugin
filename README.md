@@ -1,14 +1,12 @@
-# geode-extension-plugin README
+# Frenchfrysays's Geode Plugin
 
-This is the README for your extension "Frenchfrysays's Geode Plugin". After writing up a brief description, we recommend including the following sections.
+A Plugin for the Geode Extension
 
 ## Features
 
 - Build for platform-specific or default platform
 
-## Extension Settings
-
-This extension contributes the following settings:
+## Commands
 
 * `geodeplugin.builddefault`: Build the default platform
 * `geodeplugin.buildwin`: Build for Windows
@@ -25,3 +23,4 @@ None yet.
 ### 1.0.0
 
 Initial release of frenchfrysays's Geode Plugin
+dfgdfg
