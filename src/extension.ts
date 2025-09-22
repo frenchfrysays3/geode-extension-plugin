@@ -43,6 +43,8 @@ function configureDefault(Output: vscode.OutputChannel) {
 			Output.appendLine(`Configure incomplete. CMake Extied with Code ${code}`);
 		}
 	});
+
+	buildDefault(Output);
 }
 
 function buildDefault(Output: vscode.OutputChannel) {
@@ -262,7 +264,6 @@ export function activate(context: vscode.ExtensionContext) {
 	// Build for default command handler
 	const commandBuildDefaultHandler = () => {
 		configureDefault(Build);
-		buildDefault(Build);
 		Output.appendLine('Building for the Default Platform...');
 	};
 
