@@ -138,9 +138,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Push output window for logging
 	context.subscriptions.push(Output);
-
-	// Execute configure command
-	configureDefault(Terminal);
 }
 
 export function deactivate() {}
