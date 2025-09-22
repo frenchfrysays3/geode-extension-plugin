@@ -38,13 +38,12 @@ function configureDefault(Output: vscode.OutputChannel) {
 		if (code === 0) {
 			vscode.window.showInformationMessage('Configure completed.');
 			Output.appendLine('Configure completed. CMake exited with code 0.');
+			buildDefault(Output);
 		} else {
 			vscode.window.showErrorMessage(`Configure incomplete. CMake Exited with Code ${code}`);
 			Output.appendLine(`Configure incomplete. CMake Extied with Code ${code}`);
 		}
 	});
-
-	buildDefault(Output);
 }
 
 function buildDefault(Output: vscode.OutputChannel) {
