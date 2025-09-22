@@ -104,24 +104,29 @@ export function activate(context: vscode.ExtensionContext) {
 	const commandBuildDefaultHandler = () => {
 		configureDefault(Terminal);
 		buildDefault(Terminal);
+		Output.appendLine('Building for the Default Platform...');
 	};
 
 	// Build for Windows command handler
 	const commandBuildWinHandler = () => {
 		buildWin(Terminal);
+		Output.appendLine('Building for Windows...');
 	};
 
 	// Build for Mac command handler
 	const commandBuildMacHandler = () => {
 		buildMac(Terminal);
+		Output.appendLine('Building for macOS...');
 	};
 
 	const commandBuildIosHandler = () => {
 		buildIos(Terminal);
+		Output.appendLine('Building for iOS...');
 	};
 
 	const commandBuildAndroidHandler = () => {
 		buildAndroid(Terminal);
+		Output.appendLine('Building for android...');
 	};
 
 	const commandActivateHandler = () => {
