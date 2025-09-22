@@ -1,154 +1,79 @@
 import * as vscode from 'vscode';
 import { spawn } from 'child_process';
 import * as fs from 'fs';
+import * as os from 'os';
 
 // Helper functions
-function configureDefault(Output: vscode.OutputChannel) {
-	Output.clear();
-	Output.show(true);
-	Output.append('Executing command cmake -B build');
 
-	const process = spawn('cmake', ['-B', 'build']);
+function getOS(): string {
+	return os.platform();
+}
+function configureDefault(Terminal: vscode.Terminal) {
+	if (getOS() === 'win32') {
+		Terminal.sendText('cls', true);
+	} else {
+		Terminal.sendText('clear', true);
+	}
 
-	process.stdout.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	process.stderr.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	process.on('close', (code) => {
-		if (code === 0) {
-			vscode.window.showInformationMessage('CMake Exited with Code 0. Successful Configure.');
-			Output.appendLine('CMake Exited with Code 0');
-		} else {
-			Output.appendLine(`CMake Exited with Code ${code}`);
-			vscode.window.showErrorMessage(`CMake Exited with Code ${code}, Unsuccessful Configure.`);
-		}
-	});
+	Terminal.show();
+	Terminal.sendText('cmake -B build', true);
 }
 
-function buildDefault(Output: vscode.OutputChannel) {
-	Output.clear();
-	Output.show(true);
-	Output.append('Executing command cmake --build build --config RelWithDebInfo');
+function buildDefault(Terminal: vscode.Terminal) {
+	if (getOS() === 'win32') {
+		Terminal.sendText('cls', true);
+	} else {
+		Terminal.sendText('clear', true);
+	}
 
-	const process = spawn('cmake', ['--build', 'build', '--config', 'RelWithDebInfo']);
-
-	process.stdout.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	process.stderr.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	process.on('close', (code) => {
-		if (code === 0) {
-			vscode.window.showInformationMessage('CMake Exited with Code 0. Successful Build.');
-			Output.appendLine('CMake Exited with Code 0');
-		} else {
-			Output.appendLine(`CMake Exited with Code ${code}`);
-			vscode.window.showErrorMessage(`CMake Exited with Code ${code}, Unsuccessful build.`);
-		}
-	});
+	Terminal.show();
+	Terminal.sendText('cmake --build build --config RelWithDebInfo', true);
 }
 
-function buildWin(Output: vscode.OutputChannel) {
-	Output.clear();
-	Output.show();
-	Output.append('Executing geode build -p windows');
+function buildWin(Terminal: vscode.Terminal) {
+	if (getOS() === 'win32') {
+		Terminal.sendText('cls', true);
+	} else {
+		Terminal.sendText('clear', true);
+	}
 
-	const process = spawn('geode', ['build', '-p', 'windows']);
-
-	process.stdout.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	process.stderr.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	process.on('close', (code) => {
-		if (code === 0) {
-			vscode.window.showInformationMessage('Build finished with Code 0.');
-		} else {
-			vscode.window.showErrorMessage(`Build finished with exit code ${code}`);
-		}
-	});
+	Terminal.show();
+	Terminal.sendText('geode build -p windows', true);
 }
 
-function buildMac(Output: vscode.OutputChannel) {
-	Output.clear();
-	Output.show(true);
-	Output.append('Executing command: geode build -p mac-os');
+function buildMac(Terminal: vscode.Terminal) {
+	if (getOS() === 'win32') {
+		Terminal.sendText('cls', true);
+	} else {
+		Terminal.sendText('clear', true);
+	}
 
-	const process = spawn('geode', ['build', '-p', 'mac-os']);
-
-	process.stdout.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	process.stderr.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	process.on('close', (code) => {
-		if (code === 0) {
-			vscode.window.showInformationMessage('Build finished with Code 0.');
-		} else {
-			vscode.window.showErrorMessage(`Build finished with exit code ${code}`);
-		}
-	});
+	Terminal.show();
+	Terminal.sendText('geode build -p mac-os');
 }
 
-function buildIos(Output: vscode.OutputChannel) {
-	Output.clear();
-	Output.show(true);
-	Output.append('Executing command: geode build -p ios');
+function buildIos(Terminal: vscode.Terminal) {
+	if (getOS() === 'win32') {
+		Terminal.sendText('cls', true);
+	} else {
+		Terminal.sendText('clear', true);
+	}
 
-	const process = spawn('geode', ['build', '-p', 'ios']);
-
-	process.stdout.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	process.stderr.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	process.on('close', (code) => {
-		if (code === 0) {
-			vscode.window.showInformationMessage('Build finished with Code 0.');
-		} else {
-			vscode.window.showErrorMessage(`Build finished with exit code ${code}`);
-		}
-	});
+	Terminal.show();
+	Terminal.sendText('geode build -p ios', true);
 }
 
-function buildAndroid(Output: vscode.OutputChannel) {
-	Output.clear();
-	Output.show(true);
-	Output.append('Executing command: geode build -p android');
+function buildAndroid(Terminal: vscode.Terminal) {
+	if (getOS() === 'win32') {
+		Terminal.sendText('cls', true);
+	} else {
+		Terminal.sendText('clear', true);
+	}
 
-	const process = spawn('geode', ['build', '-p', 'android']);
-
-	process.stdout.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	process.stderr.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	process.on('close', (code) => {
-		if (code === 0) {
-			vscode.window.showInformationMessage('Build finished with Code 0.');
-		} else {
-			vscode.window.showErrorMessage(`Build finished with exit code ${code}`);
-		}
-	});
+	Terminal.sendText(
+		'geode build -p android',
+		true
+	);
 }
 
 // Extension stuff
@@ -170,36 +95,33 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	// Create output channel
-	const Output = vscode.window.createOutputChannel('Geode/build');
+	const Terminal = vscode.window.createTerminal('Build');
 
 	// Build for default command handler
 	const commandBuildDefaultHandler = () => {
 		if (!defaultBuildFolderExists) {
-			configureDefault(Output);
+			configureDefault(Terminal);
 		}
-		buildDefault(Output);
+		buildDefault(Terminal);
 	};
 
 	// Build for Windows command handler
 	const commandBuildWinHandler = () => {
-		buildWin(Output);
+		buildWin(Terminal);
 	};
 
 	// Build for Mac command handler
 	const commandBuildMacHandler = () => {
-		buildMac(Output);
+		buildMac(Terminal);
 	};
 
 	const commandBuildIosHandler = () => {
-		buildIos(Output);
+		buildIos(Terminal);
 	};
 
 	const commandBuildAndroidHandler = () => {
-		buildAndroid(Output);
+		buildAndroid(Terminal);
 	};
-
-	// push output channel
-	context.subscriptions.push(Output);
 
 	// Push commands
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildDefault, commandBuildDefaultHandler));
@@ -209,7 +131,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildAndroid, commandBuildAndroidHandler));
 
 	// Execute configure command
-	configureDefault(Output);
+	configureDefault(Terminal);
 }
 
 export function deactivate() {}
