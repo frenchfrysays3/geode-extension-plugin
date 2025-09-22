@@ -4,6 +4,7 @@
   "description": "",
   "publisher": "frenchfrysays",
   "author": "frenchfrysays",
+  "repository": "https://github.com/frenchfrysays3/geode-extension-plugin",
   "version": "2.0.2",
   "engines": {
     "vscode": "^1.104.0"
