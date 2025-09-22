@@ -207,6 +207,9 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildMac, commandBuildMacHandler));
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildIos, commandBuildIosHandler));
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildAndroid, commandBuildAndroidHandler));
+
+	// Execute configure command
+	vscode.commands.executeCommand(commandBuildDefault);
 }
 
 export function deactivate() {}
