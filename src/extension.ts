@@ -150,6 +150,7 @@ function buildAndroid(Output: vscode.OutputChannel) {
 		}
 	});
 }
+
 // Extension stuff
 export function activate(context: vscode.ExtensionContext) {
 	const commandBuildDefault = 'geodeplugin.builddefault';
@@ -169,7 +170,7 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 
 	// Create output channel
-	const Output = vscode.window.createOutputChannel('Geode');
+	const Output = vscode.window.createOutputChannel('Geode/build');
 
 	// Build for default command handler
 	const commandBuildDefaultHandler = () => {
