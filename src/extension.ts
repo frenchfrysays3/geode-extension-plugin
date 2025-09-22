@@ -131,6 +131,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const commandActivateHandler = () => {
 		Output.appendLine('Extension Activated.');
+		Output.show(true);
 	};
 
 	// Push commands
