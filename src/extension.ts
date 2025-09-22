@@ -134,6 +134,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildMac, commandBuildMacHandler));
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildIos, commandBuildIosHandler));
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildAndroid, commandBuildAndroidHandler));
+	context.subscriptions.push(vscode.commands.registerCommand(commandActivate, commandActivateHandler));
 
 	// Push output window for logging
 	context.subscriptions.push(Output);
