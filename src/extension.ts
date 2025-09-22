@@ -15,7 +15,7 @@ function getWorkspacePath(): string | undefined {
     return undefined;
 }
 
-function configureDefault(Output: vscode.OutputChannel) {
+function buildDefault(Output: vscode.OutputChannel) {
 	if (getWorkspacePath() === undefined) {
 		vscode.window.showErrorMessage('This command required at least one workspace folder open.');
 	}
@@ -24,7 +24,7 @@ function configureDefault(Output: vscode.OutputChannel) {
 	Output.show();
 	Output.appendLine('Executing command: cmake -B build');
 
-	const configureProcess = spawn('cmake', ['-B', 'build'], { cwd: getWorkspacePath() });
+	const configureProcess = spawn('geode', ['build'], { cwd: getWorkspacePath() });
 
 	configureProcess.stdout.on('data', (data) => {
 		Output.append(data.toString());
@@ -38,40 +38,9 @@ function configureDefault(Output: vscode.OutputChannel) {
 		if (code === 0) {
 			vscode.window.showInformationMessage('Configure completed.');
 			Output.appendLine('Configure completed. CMake exited with code 0.');
-			buildDefault(Output);
 		} else {
 			vscode.window.showErrorMessage(`Configure incomplete. CMake Exited with Code ${code}`);
 			Output.appendLine(`Configure incomplete. CMake Extied with Code ${code}`);
-		}
-	});
-}
-
-function buildDefault(Output: vscode.OutputChannel) {
-	if (getWorkspacePath() === undefined) {
-		vscode.window.showErrorMessage('This command requires at least 1 folder open.');
-		return;
-	}
-
-	Output.clear();
-	Output.show();
-	Output.appendLine('Executing command: cmake --build build --config RelWithDebInfo...');
-
-	const buildProcess = spawn('cmake', ['--build', 'build', '--config', 'RelWithDebInfo'], { cwd: getWorkspacePath() });
-
-	buildProcess.stdout.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	buildProcess.stderr.on('data', (data) => {
-		Output.append(data.toString());
-	});
-
-	buildProcess.on('close', (code) => {
-		if (code === 0) {
-			vscode.window.showInformationMessage('Build finished. Code 0.');
-			Output.append('Build Finished with Code 0.');
-		} else {
-			vscode.window.showErrorMessage(`Build finished with code ${code}. Unsuccessful build.`);
 		}
 	});
 }
@@ -262,7 +231,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Build for default command handler
 	const commandBuildDefaultHandler = () => {
-		configureDefault(Build);
+		buildDefault(Build);
 		Output.appendLine('Building for the Default Platform...');
 	};
 
