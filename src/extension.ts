@@ -209,7 +209,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildAndroid, commandBuildAndroidHandler));
 
 	// Execute configure command
-	vscode.commands.executeCommand(commandBuildDefault);
+	configureDefault(Output);
 }
 
 export function deactivate() {}
