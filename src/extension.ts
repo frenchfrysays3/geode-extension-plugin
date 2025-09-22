@@ -99,9 +99,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// Build for default command handler
 	const commandBuildDefaultHandler = () => {
-		if (!defaultBuildFolderExists) {
-			configureDefault(Terminal);
-		}
+		configureDefault(Terminal);
 		buildDefault(Terminal);
 	};
 
