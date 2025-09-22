@@ -83,6 +83,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const commandBuildMac = 'geodeplugin.buildmac';
 	const commandBuildIos = 'geodeplugin.buildios';
 	const commandBuildAndroid = 'geodeplugin.buildandroid';
+	const commandActivate = 'geodeplugin.activateextension';
 	let defaultBuildFolder = 'build';
 
 	let defaultBuildFolderExists;
@@ -94,8 +95,10 @@ export function activate(context: vscode.ExtensionContext) {
 		defaultBuildFolderExists = false;
 	}
 
-	// Create output channel
+	// Create terminal
 	const Terminal = vscode.window.createTerminal('Build');
+	// Create Output channel for logging
+	const Output = vscode.window.createOutputChannel('Geode Plugin');
 
 	// Build for default command handler
 	const commandBuildDefaultHandler = () => {
@@ -121,12 +124,19 @@ export function activate(context: vscode.ExtensionContext) {
 		buildAndroid(Terminal);
 	};
 
+	const commandActivateHandler = () => {
+		Output.appendLine('Extension Activated.');
+	};
+
 	// Push commands
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildDefault, commandBuildDefaultHandler));
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildWin, commandBuildWinHandler));
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildMac, commandBuildMacHandler));
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildIos, commandBuildIosHandler));
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildAndroid, commandBuildAndroidHandler));
+
+	// Push output window for logging
+	context.subscriptions.push(Output);
 
 	// Execute configure command
 	configureDefault(Terminal);
