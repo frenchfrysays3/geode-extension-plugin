@@ -13,7 +13,7 @@ A Plugin for the Geode Extension
 * `geodeplugin.buildmac`: Build for macOS
 * `geodeplugin.buildios`: Build for iOS
 * `geodeplugin.buildandroid`: Build for Android
-* `geodeplugin.activateextension`: Activate the extension for all features
+* `geodeplugin.activateextension`: Manually Activate extension
 
 ## Known Issues
 

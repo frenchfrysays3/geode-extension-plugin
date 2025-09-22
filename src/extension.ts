@@ -1,79 +1,237 @@
+// Import VSCode API
 import * as vscode from 'vscode';
+
+// Import Node.js modules
 import { spawn } from 'child_process';
 import * as fs from 'fs';
-import * as os from 'os';
 
 // Helper functions
 
-function getOS(): string {
-	return os.platform();
-}
-function configureDefault(Terminal: vscode.Terminal) {
-	if (getOS() === 'win32') {
-		Terminal.sendText('cls', true);
-	} else {
-		Terminal.sendText('clear', true);
-	}
-
-	Terminal.show();
-	Terminal.sendText('cmake -B build', true);
+function getWorkspacePath(): string | undefined {
+    // Check if any workspace folders are open and return the path of the first one.
+    if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders.length > 0) {
+        return vscode.workspace.workspaceFolders[0].uri.fsPath;
+    }
+    return undefined;
 }
 
-function buildDefault(Terminal: vscode.Terminal) {
-	if (getOS() === 'win32') {
-		Terminal.sendText('cls', true);
-	} else {
-		Terminal.sendText('clear', true);
+function configureDefault(Output: vscode.OutputChannel) {
+	if (getWorkspacePath() === undefined) {
+		vscode.window.showErrorMessage('This command required at least one workspace folder open.');
 	}
 
-	Terminal.show();
-	Terminal.sendText('cmake --build build --config RelWithDebInfo', true);
+	Output.clear();
+	Output.show();
+	Output.appendLine('Executing command: cmake -B build');
+
+	const configureProcess = spawn('cmake', ['-B', 'build'], { cwd: getWorkspacePath() });
+
+	configureProcess.stdout.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	configureProcess.stderr.on('data', (data) => {
+		Output.append(DataView.toString());
+	});
+
+	configureProcess.on('close', (code) => {
+		if (code === 0) {
+			vscode.window.showInformationMessage('Configure completed.');
+			Output.appendLine('Configure completed. CMake exited with code 0.');
+		} else {
+			vscode.window.showErrorMessage(`Configure incomplete. CMake Exited with Code ${code}`);
+			Output.appendLine(`Configure incomplete. CMake Extied with Code ${code}`);
+		}
+	});
 }
 
-function buildWin(Terminal: vscode.Terminal) {
-	if (getOS() === 'win32') {
-		Terminal.sendText('cls', true);
-	} else {
-		Terminal.sendText('clear', true);
+function buildDefault(Output: vscode.OutputChannel) {
+	if (getWorkspacePath() === undefined) {
+		vscode.window.showErrorMessage('This command requires at least 1 folder open.');
+		return;
 	}
 
-	Terminal.show();
-	Terminal.sendText('geode build -p windows', true);
+	Output.clear();
+	Output.show();
+	Output.appendLine('Executing command: cmake --build build --config RelWithDebInfo...');
+
+	const buildProcess = spawn('cmake', ['--build', 'build', '--config', 'RelWithDebInfo'], { cwd: getWorkspacePath() });
+
+	buildProcess.stdout.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	buildProcess.stderr.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	buildProcess.on('close', (code) => {
+		if (code === 0) {
+			vscode.window.showInformationMessage('Build finished. Code 0.');
+			Output.append('Build Finished with Code 0.');
+		} else {
+			vscode.window.showErrorMessage(`Build finished with code ${code}. Unsuccessful build.`);
+		}
+	});
 }
 
-function buildMac(Terminal: vscode.Terminal) {
-	if (getOS() === 'win32') {
-		Terminal.sendText('cls', true);
-	} else {
-		Terminal.sendText('clear', true);
+function buildWin(Output: vscode.OutputChannel) {
+	if (getWorkspacePath() === undefined) {
+		vscode.window.showErrorMessage('A folder is required for this command.');
 	}
 
-	Terminal.show();
-	Terminal.sendText('geode build -p mac-os');
-}
+	Output.clear();
+	Output.show();
+	Output.appendLine('Executing Command: geode build -p windows');
 
-function buildIos(Terminal: vscode.Terminal) {
-	if (getOS() === 'win32') {
-		Terminal.sendText('cls', true);
-	} else {
-		Terminal.sendText('clear', true);
-	}
-
-	Terminal.show();
-	Terminal.sendText('geode build -p ios', true);
-}
-
-function buildAndroid(Terminal: vscode.Terminal) {
-	if (getOS() === 'win32') {
-		Terminal.sendText('cls', true);
-	} else {
-		Terminal.sendText('clear', true);
-	}
-
-	Terminal.sendText(
-		'geode build -p android',
-		true
+	const buildProcess = spawn(
+		'geode', 
+		[
+			'build', 
+			'-p',
+			'windows'
+		],
+		{
+			cwd: getWorkspacePath()
+		}
 	);
+
+	buildProcess.stdout.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	buildProcess.stderr.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	buildProcess.on('close', (code) => {
+		if (code === 0) {
+			vscode.window.showInformationMessage('Build finished. Code 0.');
+			Output.append('Build Finished with Code 0.');
+		} else {
+			vscode.window.showErrorMessage(`Build finished with code ${code}. Unsuccessful build.`);
+		}
+	});
+}
+
+function buildMac(Output: vscode.OutputChannel) {
+	if (getWorkspacePath() === undefined) {
+		vscode.window.showErrorMessage('A folder is required for this command.');
+	}
+
+	Output.clear();
+	Output.show();
+	Output.appendLine('Executing Command: geode build -p mac-os');
+
+	const buildProcess = spawn(
+		'geode', 
+		[
+			'build', 
+			'-p',
+			'mac-os'
+		],
+		{
+			cwd: getWorkspacePath()
+		}
+	);
+
+	buildProcess.stdout.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	buildProcess.stderr.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	buildProcess.on('close', (code) => {
+		if (code === 0) {
+			vscode.window.showInformationMessage('Build finished. Code 0.');
+			Output.append('Build Finished with Code 0.');
+		} else {
+			vscode.window.showErrorMessage(`Build finished with code ${code}. Unsuccessful build.`);
+			Output.append(`Build finished with code ${code}. Unsuccessful build.`);
+		}
+	});
+}
+
+function buildIos(Output: vscode.OutputChannel) {
+	if (getWorkspacePath() === undefined) {
+		vscode.window.showErrorMessage('A folder is required for this command.');
+	}
+
+	Output.clear();
+	Output.show();
+	Output.appendLine('Executing Command: geode build -p ios');
+
+	const buildProcess = spawn(
+		'geode', 
+		[
+			'build', 
+			'-p',
+			'ios'
+		],
+		{
+			cwd: getWorkspacePath()
+		}
+	);
+
+	buildProcess.stdout.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	buildProcess.stderr.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	buildProcess.on('close', (code) => {
+		if (code === 0) {
+			vscode.window.showInformationMessage('Build finished. Code 0.');
+			Output.append('Build Finished with Code 0.');
+		} else {
+			vscode.window.showErrorMessage(`Build finished with code ${code}. Unsuccessful build.`);
+			Output.append(`Build finished with code ${code}. Unsuccessful build.`);
+		}
+	});
+}
+
+function buildAndroid(Output: vscode.OutputChannel) {
+	if (getWorkspacePath() === undefined) {
+		vscode.window.showErrorMessage('A folder is required for this command.');
+	}
+
+	Output.clear();
+	Output.show();
+	Output.appendLine('Executing Command: geode build -p android');
+
+	const buildProcess = spawn(
+		'geode', 
+		[
+			'build', 
+			'-p',
+			'android'
+		],
+		{
+			cwd: getWorkspacePath()
+		}
+	);
+
+	buildProcess.stdout.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	buildProcess.stderr.on('data', (data) => {
+		Output.append(data.toString());
+	});
+
+	buildProcess.on('close', (code) => {
+		if (code === 0) {
+			vscode.window.showInformationMessage('Build finished. Code 0.');
+			Output.append('Build Finished with Code 0.');
+		} else {
+			vscode.window.showErrorMessage(`Build finished with code ${code}. Unsuccessful build.`);
+			Output.append(`Build finished with code ${code}. Unsuccessful build.`);
+		}
+	});
 }
 
 // Extension stuff
@@ -99,39 +257,44 @@ export function activate(context: vscode.ExtensionContext) {
 	const Terminal = vscode.window.createTerminal('Build');
 	// Create Output channel for logging
 	const Output = vscode.window.createOutputChannel('Geode Plugin');
+	const Build = vscode.window.createOutputChannel('Geode Plugin/build');
 
 	// Build for default command handler
 	const commandBuildDefaultHandler = () => {
-		configureDefault(Terminal);
-		buildDefault(Terminal);
+		configureDefault(Build);
+		buildDefault(Build);
 		Output.appendLine('Building for the Default Platform...');
 	};
 
 	// Build for Windows command handler
 	const commandBuildWinHandler = () => {
-		buildWin(Terminal);
+		buildWin(Build);
 		Output.appendLine('Building for Windows...');
 	};
 
 	// Build for Mac command handler
 	const commandBuildMacHandler = () => {
-		buildMac(Terminal);
+		buildMac(Build);
 		Output.appendLine('Building for macOS...');
 	};
 
 	const commandBuildIosHandler = () => {
-		buildIos(Terminal);
+		buildIos(Build);
 		Output.appendLine('Building for iOS...');
 	};
 
 	const commandBuildAndroidHandler = () => {
-		buildAndroid(Terminal);
+		buildAndroid(Build);
 		Output.appendLine('Building for android...');
 	};
 
 	const commandActivateHandler = () => {
-		Output.appendLine('Extension Activated.');
-		Output.show(true);
+		if (fs.existsSync('CMakeLists.txt') === false && fs.existsSync('mod.json') === false) {
+			vscode.window.showErrorMessage('Please make sure that a CMakeLists.txt and a mod.json file are present.');
+			deactivate();
+		}
+		vscode.window.showInformationMessage('Extension is active.');
+		Output.appendLine('Extension activated.');
 	};
 
 	// Push commands
@@ -142,8 +305,9 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.commands.registerCommand(commandBuildAndroid, commandBuildAndroidHandler));
 	context.subscriptions.push(vscode.commands.registerCommand(commandActivate, commandActivateHandler));
 
-	// Push output window for logging
+	// Push output windows for logging
 	context.subscriptions.push(Output);
+	context.subscriptions.push(Build);
 }
 
 export function deactivate() {}
